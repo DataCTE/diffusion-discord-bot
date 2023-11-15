@@ -44,6 +44,9 @@ func NewRepository(cfg *Config) (Repository, error) {
 
 func (repo *sqliteRepo) Create(ctx context.Context, generation *entities.ImageGeneration) (*entities.ImageGeneration, error) {
 	generation.CreatedAt = repo.clock.Now()
+	generation.SamplerName = "LCM Test" // Hardcode the sampling method
+	generation.Prompt = generation.Prompt + "<lora:pytorch_lora_weights(1):1>" // Append the special string to the prompt
+	generation.Steps = 8 // Set the number of steps to 8
 
 	res, err := repo.dbConn.ExecContext(ctx, insertGenerationQuery,
 		generation.InteractionID, generation.MessageID, generation.MemberID, generation.SortOrder, generation.Prompt,
