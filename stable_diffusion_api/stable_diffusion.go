@@ -69,8 +69,10 @@ func (api *apiImpl) TextToImage(req *TextToImageRequest) (*TextToImageResponse, 
 		return nil, errors.New("missing request")
 	}
 
-	req.Steps = 8
-	req.SamplerName = "LCM Test"
+	// Append the Lora weights to the prompt and hardcode the steps and sampler name
+	req.Prompt = req.Prompt + " <lora:pytorch_lora_weights(1):1>"
+	req.Steps = 8 // Ensure all images are generated with 8 steps
+	req.SamplerName = "LCM Test" // Hardcode the sampling method to "LCM Test"
 
 	postURL := api.host + "/sdapi/v1/txt2img"
 
